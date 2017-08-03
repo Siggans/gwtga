@@ -1,0 +1,19 @@
+# http://editorconfig.org
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# These two must be different because bower, npm, and tsc will automatically reformat them
+# anyway. Each time that happens, you'll end up having to manually reformat.
+[{bower.json,package.json}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

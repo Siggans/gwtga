@@ -1,0 +1,129 @@
+{
+    "rulesDirectory": [
+        "node_modules/tslint-eslint-rules/dist/rules",
+        "node_modules/tslint-microsoft-contrib"
+    ],
+    "rules": {
+        "arrow-parens": true,
+        "class-name": true,
+        "comment-format": [
+            true,
+            "check-space"
+        ],
+        "curly": true,
+        "eofline": true,
+        "indent": [
+            true,
+            "spaces",
+            4
+        ],
+        "jsdoc-format": true,
+        "new-parens": true,
+        "no-duplicate-variable": true,
+        "no-eval": true,
+        "no-internal-module": true,
+        "no-invalid-this": true,
+        "no-trailing-whitespace": true,
+        "no-unsafe-finally": true,
+        "no-var-keyword": true,
+        "one-line": [
+            true,
+            "check-open-brace",
+            "check-whitespace"
+        ],
+        "one-variable-per-declaration": [
+            true,
+            "ignore-for-loop"
+        ],
+        "quotemark": [
+            true,
+            "single",
+            "avoid-escape"
+        ],
+        "semicolon": [
+            true,
+            "always"
+        ],
+        "switch-default": true,
+        "triple-equals": [
+            true,
+            "allow-null-check",
+            "allow-undefined-check"
+        ],
+        "typedef-whitespace": [
+            true,
+            {
+                "call-signature": "nospace",
+                "index-signature": "nospace",
+                "parameter": "nospace",
+                "property-declaration": "nospace",
+                "variable-declaration": "nospace"
+            }
+        ],
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "allow-leading-underscore"
+        ],
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type"
+        ],
+        "no-debugger": true,
+        "no-duplicate-case": true,
+        "no-empty-character-class": true,
+        "no-extra-semi": true,
+        "no-invalid-regexp": true,
+        "no-irregular-whitespace": true,
+        "no-inner-declarations": true,
+        "no-regex-spaces": true,
+        "no-sparse-arrays": true,
+        "no-unexpected-multiline": true,
+        "use-isnan": true,
+        "valid-jsdoc": [
+            "error",
+            {
+                "prefer": {
+                    "arg": "param",
+                    "argument": "param",
+                    "class": "constructor",
+                    "return": "returns",
+                    "virtual": "abstract"
+                },
+                "preferType": {
+                    "Boolean": "boolean",
+                    "Number": "number",
+                    "object": "Object",
+                    "String": "string"
+                },
+                "requireReturn": false,
+                "requireReturnType": true,
+                "requireParamDescription": true,
+                "requireReturnDescription": true,
+                "matchDescription": ".+"
+            }
+        ],
+        "valid-typeof": true,
+        "array-bracket-spacing": [
+            "error",
+            "never"
+        ],
+        "brace-style": [
+            "error",
+            "stroustrup"
+        ],
+        "no-document-write": true,
+        "no-disable-auto-sanitization": true,
+        "no-cookies": true,
+        "no-exec-script": true,
+        "no-inner-html": true,
+        "no-jquery-raw-elements": true,
+        "no-octal-literal": true,
+        "no-relative-imports": false,
+        "no-with-statement": true
+    }
+}

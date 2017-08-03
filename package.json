@@ -1,26 +1,32 @@
 {
-  "name": "node-js-getting-started",
+  "name": "gwtga",
   "version": "0.2.6",
-  "description": "A sample Node.js app using Express 4",
+  "description": "Guild Wars 2 Guild Admin",
   "engines": {
-    "node": "6.11.1"
+    "node": "8.2.1"
   },
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "node test.js"
-  },
+  "main": "server/index.js",
   "dependencies": {
-    "ejs": "2.5.6",
-    "express": "4.15.2"
+    "express": "^4.15.2"
   },
   "devDependencies": {
-    "request": "^2.81.0",
-    "tape": "^4.7.0"
+    "@types/express": "^4.0.36",
+    "eslint": "^4.3.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-shell": "^2.1.0",
+    "load-grunt-config": "^0.19.2",
+    "lodash": "^4.17.4",
+    "tslint": "^5.5.0",
+    "tslint-eslint-rules": "^4.1.1",
+    "tslint-microsoft-contrib": "^5.0.1",
+    "typescript": "^2.4.2",
+    "vulcanize": "^1.16.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
+    "url": "https://github.com/Siggans/gwtga.git"
   },
   "keywords": [
     "node",
