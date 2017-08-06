@@ -21,7 +21,7 @@ module.exports = (grunt) => {
     return {
         // This task copies the artifacts that we generated from compilation into another folder that we will
         // be using for heroku local testing and deployment.
-        dist: {
+        output: {
             files: [
                 {
                     expand: true,
@@ -33,16 +33,47 @@ module.exports = (grunt) => {
                     expand: true,
                     cwd: '.',
                     src: [
-                        '.env',
-                        'app.json',
                         'package.json',
-                        'Procfile',
-                        'Readme.md'
+                        'Procfile'
                     ],
                     dest: outputPath
                 }
-
             ]
+        },
+
+        // This task is used to copy all resources such as html, pictures
+        resources: {
+            expand: true,
+            cwd: 'src',
+            src: [
+                '**/*',
+                '!public/bower_components/**/*',
+                '!**/*.sass'
+            ],
+            dest: 'artifacts'
+        },
+
+        // For development, we would want to copy over the entire bower directory and ts files
+        dev: {
+            files: [
+                // Replicate the full bower directory in dev mode
+                {
+                    expand: true,
+                    cwd: 'src',
+                    src: ['public/bower_components'],
+                    dest: 'artifacts'
+                },
+                {
+                    // No need to vulcanize components while in development mode.
+                    src: 'artifacts/public/components.html',
+                    dest: 'artifacts/public/components-v.html'
+                }
+            ]
+        },
+
+        // For staging, we will need to determine which bower files we need to copy over that is not vulcanized.
+        staging: {
+            files: []
         }
     };
 };

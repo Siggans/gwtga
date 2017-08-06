@@ -1,8 +1,17 @@
 {
-  "name": "Start on Heroku: Node.js",
-  "description": "A barebones Node.js app using Express 4",
-  "repository": "https://github.com/heroku/node-js-getting-started",
-  "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
-  "keywords": ["node", "express", "heroku"],
-  "image": "heroku/nodejs"
+    "note": [
+        "This file is used as a placeholder and will not be used for actual push to heroku.  To config app using",
+        "this file, please set up this file on the output directory."
+    ],
+    "name": "gwtga",
+    "description": "A book keeping program for managing guilds in Guild Wars 2",
+    "repository": "https://github.com/Siggans/gwtga.git",
+    "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
+    "image": "heroku/nodejs",
+    "keywords": [
+        "node",
+        "express",
+        "heroku"
+    ]
+
 }

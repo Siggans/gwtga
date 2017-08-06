@@ -1,5 +1,6 @@
 'use strict';
 
+const compression = require('compression');
 const express = require('express');
 const path = require('path');
 
@@ -9,6 +10,14 @@ const app = express();
 
 app.set('port', (process.env.PORT || 8080));
 
+// Use Compress response.
+app.use(compression({
+    filter: (req, res) => {
+        if (req.headers['x-no-compression']) {
+            return false;
+        }
+        return compression.filter(req, res);
+    }));
 app.use(express.static(publicContentPath));
 
 app.get('/', function (req, res) {

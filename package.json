@@ -5,19 +5,34 @@
   "engines": {
     "node": "8.2.1"
   },
+  "private": true,
   "main": "server/index.js",
   "dependencies": {
-    "express": "^4.15.2"
+    "compression": "^1.7.0",
+    "express": "^4.15.2",
+    "pg": "^7.1.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.4.2",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
+    "@types/compression": "0.0.33",
     "@types/express": "^4.0.36",
+    "@types/sequelize": "^4.0.67",
+    "autoprefixer": "^7.1.2",
     "eslint": "^4.3.0",
     "grunt": "^1.0.1",
+    "grunt-autoprefixer": "^3.0.4",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-eslint": "^20.0.0",
+    "grunt-sass": "^2.0.0",
     "grunt-shell": "^2.1.0",
+    "grunt-tslint": "^5.0.1",
     "load-grunt-config": "^0.19.2",
     "lodash": "^4.17.4",
+    "node-sass-import-once": "^1.2.0",
+    "postcss": "^6.0.8",
     "tslint": "^5.5.0",
     "tslint-eslint-rules": "^4.1.1",
     "tslint-microsoft-contrib": "^5.0.1",
