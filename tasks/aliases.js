@@ -5,7 +5,7 @@
  *
  * @returns {any} Configuration object for grunt.
  */
-module.exports = (/* grunt */) => { // eslint-disable-line arrow-body-statement
+module.exports = (/* grunt */) => { // eslint-disable-line arrow-body-style
 
     return {
         default: {

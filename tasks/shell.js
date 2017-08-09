@@ -9,7 +9,7 @@ module.exports = (grunt) => {
     return {
         option: {
             stdout: true,
-            stderr: true,
+            stderr: true
         },
         typescript: {
             command: (configName) => {

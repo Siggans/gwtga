@@ -7,8 +7,10 @@
                 "../type-definitions/*"
             ]
         },
+        "declarationDir": "src/type-definitions",
         "target": "es6",
         "sourceMap": true,
+        "module": "commonjs",
         "moduleResolution": "node",
         "isolatedModules": false,
         "jsx": "react",
@@ -18,7 +20,7 @@
         "noImplicitAny": true,
         "noImplicitUseStrict": true,
         "removeComments": false,
-        "noEmit": true,
+        "noEmit": false,
         "noLib": false,
         "preserveConstEnums": true,
         "pretty": true,
@@ -27,12 +29,6 @@
         "rootDir": "src/server",
         "newLine": "lf"
     },
-    "include": [
-        "src/server/**/*.ts"
-    ],
-    "exclude": [
-        "src/type-definitions"
-    ],
     "compileOnSave": true,
     "buildOnSave": false
 }

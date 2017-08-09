@@ -7,15 +7,15 @@ const fs = require('fs');
 // Documentation may be found at https://www.npmjs.com/package/load-grunt-config
 module.exports = (grunt) => {
 
-    const projectRoot = path.join(__dirname, '..');
+    const projectRoot = path.join(__dirname);
     const projectName = path.basename(projectRoot);
     const herokuPath = path.join(projectRoot, '..', projectName + '-heroku-private');
 
-    grunt.log.writeln('Apparent Project Name: ' + projectName.yellow.bold);
+    grunt.log.writeln('Apparent Project Name: ' + projectName.yellow);
     grunt.log.writeln('Computed Heroku Output: ' + herokuPath.yellow);
 
     if ('_opts' in grunt) { // make sure we are not overwriting existing properties
-        throw new Error('_opts property is being used by grunt,  we should pick another property');
+        throw new Error('grunt._opts property is being used,  we should pick another property');
     }
 
     grunt._opts = {
@@ -34,7 +34,7 @@ module.exports = (grunt) => {
 
         // Override these to perform custom initializations steps.
         postProcess: null,
-        preMerge: null,
+        preMerge: null
     };
 
     require('load-grunt-config')(grunt, configOpts);

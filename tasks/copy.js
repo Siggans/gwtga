@@ -60,7 +60,7 @@ module.exports = (grunt) => {
                 {
                     expand: true,
                     cwd: 'src',
-                    src: ['public/bower_components'],
+                    src: ['public/bower_components/**/*'],
                     dest: 'artifacts'
                 },
                 {

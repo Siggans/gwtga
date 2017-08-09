@@ -22,7 +22,7 @@ module.exports = (grunt) => {
         };
 
         grunt.log.writeln();
-        grunt.log.subhead(('Starting Sub-Task \'' + taskName + '\''));
+        grunt.log.writeln(('Starting Sub-Task \'' + taskName + '\''));
         grunt.util.spawn(options, (error, result, code) => {
             /* eslint-disable dot-notation */
             grunt.log.write('\nReturned from sub-task \'' + taskName + '\': ');

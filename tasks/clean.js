@@ -28,7 +28,11 @@ module.exports = (grunt) => {
                 'server/',
                 'Procfile',
                 'package.json'
-            ]
+            ],
+            options: {
+                // Needed to remove files outside the CWD.
+                force: true
+            }
         }
     };
 };

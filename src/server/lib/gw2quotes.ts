@@ -1,30 +1,29 @@
-'use strict';
 
 // https://wiki.guildwars2.com/wiki/User:Manifold/Player_character_quotes
 const raceQuotes = {
     charr: {
-        imgUrl: '',
+        imgUrl: "",
         quotes: [
-            'Haven\'t seen this yet',
-            'Looks like new territory',
-            'Can\'t wait to tell my warband about this place',
-            'A whole new place to conquer',
-            'I need some space!',
-            'Ah, I see',
-            'Need healing',
-            'Medic !',
-            'Swiftly',
-            'Faster!',
-            'I feel...Strong!',
-            'Retaliation incoming',
-            'Go ahead, hit me',
-            'Entertain the awesome',
-            'the life for me!'
+            "Haven't seen this yet",
+            "Looks like new territory",
+            "Can't wait to tell my warband about this place",
+            "A whole new place to conquer",
+            "I need some space!",
+            "Ah, I see",
+            "Need healing",
+            "Medic!",
+            "Swiftly",
+            "Faster!",
+            "I feel...Strong!",
+            "Retaliation incoming",
+            "Go ahead, hit me",
+            "Entertain the awesome",
+            "The life for me!"
         ]
     }
 };
 
-const races = ['charr'];
+const races = ["charr"];
 
 interface RaceQuote {
     imgUrl: string;
@@ -47,7 +46,7 @@ function selectRandomElementFromArray<T>(array: Array<T>): T {
 }
 
 function createRandomIndex(maxInt: number): number {
-    if (typeof maxInt !== 'number' || maxInt <= 0) { // We support only positive number value.
+    if (typeof maxInt !== "number" || maxInt <= 0) { // We support only positive number value.
         return 0;
     }
     maxInt = Math.floor(maxInt);
