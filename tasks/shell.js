@@ -14,11 +14,12 @@ module.exports = (grunt) => {
         typescript: {
             command: (configName) => {
                 let configFile = 'tsconfig' + (configName ? '-' + configName : '') + '.json';
+                let tscArg = grunt.option('verbose') ? '--listEmittedFiles' : '';
                 if (!require('fs').existsSync(configFile)) { // eslint-disable-line no-sync
                     grunt.fail.fatal('Cannot find ' + configFile);
                 }
                 grunt.log.ok('Using typescript configuration ' + configFile);
-                return 'tsc -p ' + configFile + ' --listEmittedFiles';
+                return `tsc -p ${configFile} ${tscArg}`;
             },
             options: {
                 callback: function (err, stdout, stderr, cb) {

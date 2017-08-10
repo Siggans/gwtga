@@ -29,6 +29,9 @@
         "rootDir": "src/server",
         "newLine": "lf"
     },
+    "include": [
+        "src/server/**/*"
+    ],
     "compileOnSave": true,
     "buildOnSave": false
 }

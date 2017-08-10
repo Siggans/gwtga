@@ -21,8 +21,6 @@ declare class ServerConfig {
     readonly environment: string;
     private _isValid;
     readonly isValid: boolean;
-    private _db_no_ssl;
-    readonly dbUseSSL: boolean;
     private _readConfiguration();
 }
 export = ServerConfig;

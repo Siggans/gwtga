@@ -11,8 +11,11 @@ module.exports = (grunt) => {
     const projectName = path.basename(projectRoot);
     const herokuPath = path.join(projectRoot, '..', projectName + '-heroku-private');
 
-    grunt.log.writeln('Apparent Project Name: ' + projectName.yellow);
-    grunt.log.writeln('Computed Heroku Output: ' + herokuPath.yellow);
+    if (process.env.__GRUNT_PRINT_HEADER !== 'TRUE') { // eslint-disable-line no-process-env
+        grunt.log.writeln('Apparent Project Name: ' + projectName.yellow);
+        grunt.log.writeln('Computed Heroku Output: ' + herokuPath.yellow);
+        process.env.__GRUNT_PRINT_HEADER = 'TRUE';  // eslint-disable-line no-process-env
+    }
 
     if ('_opts' in grunt) { // make sure we are not overwriting existing properties
         throw new Error('grunt._opts property is being used,  we should pick another property');

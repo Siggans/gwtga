@@ -1,4 +1,3 @@
-
 import {Request, Response} from "express-serve-static-core";
 
 const serverConfig = require("lib/server-config");
@@ -16,6 +15,11 @@ if (!serverConfig.VerifyConfigExists()) {
 }
 
 const config = serverConfig.GetInstance();
+
+if (!config.isValid) {
+    console.error("Failed to retrieve necessary configuration values! Exiting server startup sequence.");
+    process.exit(1);
+}
 
 expressServerStartUp();
 

@@ -47,6 +47,9 @@ module.exports = (grunt) => {
             cwd: 'src',
             src: [
                 '**/*',
+                '!type-definitions',
+                '!type-definitions/**/*',
+                '!public/bower_components',
                 '!public/bower_components/**/*',
                 '!**/*.sass'
             ],
