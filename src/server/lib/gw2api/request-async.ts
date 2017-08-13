@@ -16,7 +16,7 @@ async function requestAsync(endPoint: string, options?: RequestOption): Promise<
             timeout: options.timeout || 10 * 1000,
             transform: (body, response: http.IncomingMessage): ApiResponseData => {
                 let result: ApiResponseData = {
-                    data: body,
+                    data: JSON.parse(body),
                     response: response,
                 };
                 let pagingCreated = false;
@@ -50,6 +50,7 @@ function modifyOption(requestOptions: requestPromise.Options, options: RequestOp
     // https://wiki.guildwars2.com/wiki/API:2
 
     if (!options) {
+        console.log(JSON.stringify(requestOptions, null, 2));
         return requestOptions;
     }
 
@@ -85,7 +86,6 @@ function modifyOption(requestOptions: requestPromise.Options, options: RequestOp
 
     // Localization
     requestOptions.headers["Accept-Language"] = "en";
-
     return requestOptions;
 }
 

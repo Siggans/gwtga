@@ -22,3 +22,9 @@ export interface ApiResponseData {
         itemsTotal?: number
     };
 }
+
+export interface MemberData {
+    name: string;
+    rank: number;
+    joined: Date;
+}

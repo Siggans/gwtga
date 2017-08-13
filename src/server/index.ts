@@ -1,4 +1,5 @@
 import {Request, Response} from "express-serve-static-core";
+import GW2Api = require("./lib/gw2api/index");
 
 const serverConfig = require("./lib/server-config");
 const compression = require("compression");
@@ -23,7 +24,7 @@ if (!config.isValid) {
 
 expressServerStartUp();
 
-function expressServerStartUp() {
+async function expressServerStartUp() {
 
     // PORT env is set automatically in production server.
     app.set("port", (process.env.PORT || 8080));
@@ -43,6 +44,37 @@ function expressServerStartUp() {
 
     app.get("/", (req: Request, res: Response) => {
         res.send("<p>Hello World?</p>");
+    });
+
+    app.get("/test/logs", async (req: Request, res: Response) => {
+        try {
+            let logList = (await GW2Api.GetGuildLogAsync()).data as Array<any>;
+            let body: string = "Total Count: " + logList.length + "<p>";
+            logList.forEach((log) => {
+                body += `${JSON.stringify(log)}<br>`;
+            });
+            body += "</p>";
+            res.send(body);
+        } catch (err) {
+            console.log(err);
+            res.status(500).end();
+        }
+
+    });
+
+    app.get("/test/members", async (req: Request, res: Response) => {
+        try {
+            let memberList = await GW2Api.GetGuildMembersDataAsync();
+            let body: string = "Total Count: " + memberList.length + "<ul>";
+            memberList.forEach((member) => {
+                body += `<li>${JSON.stringify(member)}</li>`;
+            });
+            body += "</ul>";
+            res.send(body);
+        } catch (err) {
+            console.log(err);
+            res.status(500).end();
+        }
     });
 
     app.listen(app.get("port"), () => {

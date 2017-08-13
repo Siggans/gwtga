@@ -1,53 +1,66 @@
-import {ApiResponseData, RequestOption} from "./api-types";
+import {ApiResponseData, MemberData, RequestOption} from "./api-types";
 
-const requestAsync = require("request-async");
+const requestAsync = require("./request-async");
 const config = require("../server-config").GetInstance();
 const guildId = config.guildId;
 
 class GW2Api {
 
-    public static async GetGuildMembersAsync(pageNumber?: number, pageSize?: number): Promise<ApiResponseData> {
+    public static async GetGuildMembersAsync(): Promise<ApiResponseData> {
         let url = `/v2/guild/${config.guildId}/members`;
         let option: RequestOption = {
-            authenticate: true,
+            authenticate: true
         };
-        if (typeof(pageSize) === "number" || typeof(pageNumber) === "number") {
-            option.paging = {};
-            if (pageNumber !== 0) { // this number must exist if test valid.  pageSize is 2nd option and can be missing.
-                option.paging.page = pageNumber;
-            }
-            if (typeof(pageSize) === "number" && pageSize > 0) {
-                option.paging.size = pageSize;
-            }
-        }
-        return await requestAsync(url, {authenticate: true});
+        return await requestAsync(url, option);
     }
 
-    public static async GetGuildLogAsync(options?: { lastId?: number; pageNumber?: number; pageSize?: number }): Promise<ApiResponseData> {
-        let url = `/v2/guild/${config.guildId}/members`;
+    public static async GetGuildLogAsync(since?: number): Promise<ApiResponseData> {
+        let url = `/v2/guild/${config.guildId}/log`;
         let option: RequestOption = {
             authenticate: true,
+            timeout: 15 * 1000
         };
-        if (options) {
-            if ("lastId" in options) {
-                option.qs = {since: options.lastId};
-            }
-            if ("pageSize" in options || "pageNumber" in options) {
-                option.paging = {};
-                if ("pageNumber" in options && options.pageNumber >= 0) {
-                    option.paging.page = options.pageNumber;
-                }
-                if ("pageSize" in options && options.pageSize > 0) {
-                    option.paging.size = options.pageSize;
-                }
-            }
+
+        if (typeof (since) === "number") {
+            option.qs = {since: since};
         }
-        throw new Error("NotImplemented");
+        return await requestAsync(url, option);
     }
 
     public static async GetGuildRanksAsync(): Promise<ApiResponseData> {
         let url = `/v2/guild/${config.guildId}/ranks`;
         return await requestAsync(url, {authenticate: true});
+    }
+
+    public static async GetGuildMembersDataAsync(): Promise<Array<MemberData>> {
+        let rankMap = GW2Api.ConvertDataToRankMap((await GW2Api.GetGuildRanksAsync()).data);
+        let responseData = await GW2Api.GetGuildMembersAsync();
+        return GW2Api.ConvertDataToMemberData(responseData.data, rankMap);
+    }
+
+    public static ConvertDataToRankMap(arrayData: Array<any>): any {
+        let rankMap = {};
+        arrayData.forEach((data) => {
+            rankMap[data.id.toUpperCase()] = typeof(data.order) === "number" ? data.order : parseInt(data.order, 10) || 9999;
+        });
+        return rankMap;
+    }
+
+    public static ConvertDataToMemberData(arrayData: Array<any>, rankMap: any): Array<MemberData> {
+        let memberTracker = {};
+        let result: Array<MemberData> = [];
+        arrayData.forEach((data: any) => {
+            if (data.name in memberTracker) {
+                return;
+            }
+            memberTracker[data.name] = true;
+            result.push({
+                name: <string>data.name,
+                rank: <number>rankMap[data.rank.toUpperCase()],
+                joined: new Date(Date.parse(data.joined))
+            });
+        });
+        return result;
     }
 }
 

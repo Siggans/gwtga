@@ -34,6 +34,7 @@ module.exports = (grunt) => {
                     cwd: '.',
                     src: [
                         'package.json',
+                        'package-lock.json',
                         'Procfile'
                     ],
                     dest: outputPath
