@@ -1,6 +1,6 @@
 import {Request, Response} from "express-serve-static-core";
 
-const serverConfig = require("lib/server-config");
+const serverConfig = require("./lib/server-config");
 const compression = require("compression");
 const express = require("express");
 const path = require("path");

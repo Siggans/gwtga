@@ -3,11 +3,10 @@
         "baseUrl": "src/server",
         "paths": {
             "*": [
-                "*",
-                "../type-definitions/*"
+                "*"
             ]
         },
-        "declarationDir": "src/type-definitions",
+        "declaration": false,
         "target": "es6",
         "sourceMap": true,
         "module": "commonjs",
@@ -16,7 +15,6 @@
         "jsx": "react",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "declaration": true,
         "noImplicitAny": true,
         "noImplicitUseStrict": true,
         "removeComments": false,

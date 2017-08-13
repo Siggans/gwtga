@@ -1,4 +1,3 @@
-import "globals";
 
 import path = require("path");
 import fs = require("fs");
