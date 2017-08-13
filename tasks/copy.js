@@ -34,6 +34,7 @@ module.exports = (grunt) => {
                     cwd: '.',
                     src: [
                         'package.json',
+                        'package-lock.json',
                         'Procfile'
                     ],
                     dest: outputPath
@@ -47,6 +48,9 @@ module.exports = (grunt) => {
             cwd: 'src',
             src: [
                 '**/*',
+                '!type-definitions',
+                '!type-definitions/**/*',
+                '!public/bower_components',
                 '!public/bower_components/**/*',
                 '!**/*.sass'
             ],

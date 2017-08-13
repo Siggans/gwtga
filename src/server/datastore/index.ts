@@ -1,0 +1,5 @@
+
+class DataStore {
+}
+
+export = DataStore;

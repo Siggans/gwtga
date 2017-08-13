@@ -1,4 +1,3 @@
-import "globals";
 
 import path = require("path");
 import fs = require("fs");
@@ -16,9 +15,6 @@ const EnvFile = path.join(RootDir, ".env");
 const ConfigFile = path.join(RootDir, "server-config.json");
 
 const ConfigFields = {
-    LOCAL_DB_URL: "local-db-url",
-    DB_USER: "db-user",
-    DB_PW: "db-pw",
     COOKIE_SECRET: "cookie-secret",
     GUILD_API_KEY: "guild-api-key",
     GUILD_NAME: "guild-name",
@@ -88,9 +84,14 @@ class ServerConfig {
         return this._environment;
     }
 
-    private _isValid: boolean = false;
+    private _isValid: boolean;
     public get isValid(): boolean {
         return this._isValid;
+    }
+
+    private _db_no_ssl: boolean;
+    public get dbUseSSL(): boolean {
+        return !this._db_no_ssl;
     }
 
     private _readConfiguration() {
@@ -98,13 +99,14 @@ class ServerConfig {
         let serverConfig = require(ConfigFile);
 
         this._environment = process.env.APP_ENVIRONMENT;
+        this._db_no_ssl = process.env.DATABASE_NO_SSL === "1";
         this._appName = getConfigValue(ConfigFields.APP_NAME);
         this._cookieSecret = getConfigValue(ConfigFields.COOKIE_SECRET);
         this._guildApiKey = getConfigValue(ConfigFields.GUILD_API_KEY);
         this._guildId = getConfigValue(ConfigFields.GUILD_ID);
         this._guildName = getConfigValue(ConfigFields.GUILD_NAME);
         this._guildTag = getConfigValue(ConfigFields.GUILD_TAG);
-        this._dbUrl = ("DATABASE_URL" in process.env) ? process.env.DATABASE_URL : getConfigValue(ConfigFields.LOCAL_DB_URL);
+        this._dbUrl = process.env.DATABASE_URL;
 
         this._isValid = isValid;
 
