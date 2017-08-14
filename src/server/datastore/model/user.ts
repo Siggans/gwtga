@@ -1,10 +1,10 @@
 import sequelize = require("sequelize");
 
-import orm = require("datastore/orm-initialize");
+import orm = require("../orm-initialize");
 
 const UserDefinition: sequelize.DefineAttributes = {
     // Primary Key
-    id: {type: sequelize.INTEGER, autoIncrement: true},
+    id: {type: sequelize.INTEGER, autoIncrement: true, primaryKey: true},
 
     // Guild wars 2 account
     gw2Account: {type: sequelize.STRING(50), unique: true},
