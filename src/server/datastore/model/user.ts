@@ -25,12 +25,6 @@ const UserDefinition: sequelize.DefineAttributes = {
     // Check if user is registered.
     registered: {type: sequelize.BOOLEAN, defaultValue: false, allowNull: false},
 
-    // Check if this account has been automatically acquired
-    isAutomated: {type: sequelize.BOOLEAN, defaultValue: false, allowNull: false},
-
-    // Developer access, this is restricted to primary developer and collaborators.
-    isDev: {type: sequelize.BOOLEAN, defaultValue: false, allowNull: false},
-
     // We should not invite this user back to guild under any circumstance.
     isBanned: {type: sequelize.BOOLEAN, defaultValue: false, allowNull: false},
 
@@ -39,9 +33,8 @@ const UserDefinition: sequelize.DefineAttributes = {
 
     rejoinCount: {type: sequelize.INTEGER, defaultValue: 0, allowNull: false},
 
-    // Notes we want to keep on this user for admin purpose.
-    officerNote: sequelize.STRING(2000)
-
+    // password hash storage. This data should not be displayed or sent to end user.
+    hash: sequelize.STRING
 };
 
 export = orm.define("User", UserDefinition, {

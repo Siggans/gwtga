@@ -54,22 +54,14 @@ function modifyOption(requestOptions: requestPromise.Options, options: RequestOp
         return requestOptions;
     }
 
-    if ("headers" in options) {
-        requestOptions.headers = Object.assign(requestOptions.headers || {}, options.headers);
-    }
-
-    if (!("headers" in requestOptions)) {
-        requestOptions.headers = {};
-    }
+    requestOptions.headers = Object.assign(requestOptions.headers || {}, options.headers || {});
 
     // Add API Key Bearer
     if (options.authenticate) {
         requestOptions.headers["Authorization"] = "Bearer " + config.guildApiKey;
     }
 
-    if ("qs" in options) {
-        requestOptions.qs = Object.assign(requestOptions.qs || {}, options.qs);
-    }
+    requestOptions.qs = Object.assign(requestOptions.qs || {}, options.qs || {});
 
     // Paging
     if (options.paging) {
