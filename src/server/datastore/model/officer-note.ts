@@ -11,8 +11,10 @@ const OfficerNoteDefinition: sequelize.DefineAttributes = {
 
     createdBy: {type: sequelize.NUMBER, allowNull: false},
 
+    // targeted member of the note.
     target: {type: sequelize.NUMBER, allowNull: false},
 
+    // The short note from officer. 255 characters.
     message: {type: sequelize.STRING, allowNull: false}
 };
 
