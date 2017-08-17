@@ -24,7 +24,22 @@ if (!config.isValid) {
 
 expressServerStartUp();
 
+async function datastoreInitAsync() {
+
+    const datastore =  require("./datastore");
+
+    let sync = await datastore.initializeAsync();
+    console.log("Database Synchronized: " + (sync ? "YES" : "nooooooo"));
+
+    return sync;
+}
+
 async function expressServerStartUp() {
+
+    if (!await datastoreInitAsync() ) {
+        console.error("Cannot Synchronize Datastore Models..  Exiting");
+        process.exit(1);
+    }
 
     // PORT env is set automatically in production server.
     app.set("port", (process.env.PORT || 8080));
