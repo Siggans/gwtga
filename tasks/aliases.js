@@ -13,6 +13,18 @@ module.exports = (/* grunt */) => { // eslint-disable-line arrow-body-style
             tasks: ['dev-build']
         },
 
+        'debug-build': {
+            description: 'Setting up Debug Build',
+            task: [
+                'clean-workspace',
+                'copy:resources',
+                'compile',
+                'copy:dev',
+                'copy:output',
+                'copy:debug'
+            ]
+        },
+
         'dev-build': {
             description: 'Setting up Developer Build',
             tasks: [

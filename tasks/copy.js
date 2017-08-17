@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 /**
  * Config copy task
  *
@@ -38,6 +40,20 @@ module.exports = (grunt) => {
                         'Procfile'
                     ],
                     dest: outputPath
+                }
+            ]
+        },
+
+        debug: {
+            files: [
+                {
+                    expand: true,
+                    cwd: '.',
+                    src: [
+                        'Procfile.debug'
+                    ],
+                    dest: outputPath,
+                    rename: () => path.join(outputPath, 'Procfile')
                 }
             ]
         },
