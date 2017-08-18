@@ -1,12 +1,10 @@
-/// <references path="node" />
-import "globals";
+/// <references path="../globals" />
 
-const {URL} = require("url");
-
+import {serverConfig} from "../lib/server-config";
 import {ISequelizeConfig, ISequelizeValidationOnlyConfig, Sequelize} from "sequelize-typescript";
 import pg = require("pg");
 
-const config = require("../lib/server-config").GetInstance();
+const {URL} = require("url");
 
 declare namespace NodeJS {
     export interface Global {
@@ -14,9 +12,9 @@ declare namespace NodeJS {
     }
 }
 
-const databaseUrl = new URL(config.dbUrl);
+const databaseUrl = new URL(serverConfig.dbUrl);
 
-pg.defaults.ssl = config.dbUseSSL; // let's set the ssl requirement now.
+pg.defaults.ssl = serverConfig.dbUseSSL; // let's set the ssl requirement now.
 pg.defaults.parseInt8 = true; // enable big int (64 bits) parsing and return as int.
 
 const opts: ISequelizeConfig = {
@@ -35,7 +33,7 @@ const opts: ISequelizeConfig = {
     validateOnly: false
 };
 
-function getOrmInstance(): Sequelize {
+export function getOrmInstance(): Sequelize {
 
     if (!global.__server_orm) {
         try {
@@ -45,10 +43,9 @@ function getOrmInstance(): Sequelize {
             console.error(err);
             return null;
         }
-
     }
 
     return global.__server_orm;
 }
 
-export = getOrmInstance();
+export default getOrmInstance;

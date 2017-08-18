@@ -1,18 +1,17 @@
 import {ApiResponseData, MemberData, RequestOption} from "./api-types";
-
-const requestAsync = require("./request-async");
-const config = require("../server-config").GetInstance();
+import {requestAsync} from "./request-async";
+import {serverConfig} from "../server-config";
 
 class GW2Api {
 
     public static async GetGuildMembersAsync(): Promise<ApiResponseData> {
-        let url = `/v2/guild/${config.guildId}/members`;
+        let url = `/v2/guild/${serverConfig.guildId}/members`;
         return await requestAsync(url, {authenticate: true});
     }
 
     public static async GetGuildLogAsync(since?: number): Promise<ApiResponseData> {
         // log request has longer running time.  We should avoid this call on web request.
-        let url = `/v2/guild/${config.guildId}/log`;
+        let url = `/v2/guild/${serverConfig.guildId}/log`;
         let option: RequestOption = {
             authenticate: true,
             timeout: 15 * 1000
@@ -25,7 +24,7 @@ class GW2Api {
     }
 
     public static async GetGuildRanksAsync(): Promise<ApiResponseData> {
-        let url = `/v2/guild/${config.guildId}/ranks`;
+        let url = `/v2/guild/${serverConfig.guildId}/ranks`;
         return await requestAsync(url, {authenticate: true});
     }
 
@@ -61,4 +60,4 @@ class GW2Api {
     }
 }
 
-export = GW2Api;
+export default GW2Api;

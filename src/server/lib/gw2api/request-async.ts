@@ -1,13 +1,13 @@
 import {ApiResponseData, RequestOption} from "./api-types";
+import {serverConfig} from "../server-config";
 import * as requestPromise from "request-promise-native";
 import * as http from "http";
 
-const config = require("../server-config").GetInstance();
 import prequest = require("request-promise-native");
 
 const ApiHost = "https://api.guildwars2.com/";
 
-async function requestAsync(endPoint: string, options?: RequestOption): Promise<ApiResponseData> {
+export async function requestAsync(endPoint: string, options?: RequestOption): Promise<ApiResponseData> {
 
     return prequest(modifyOption({
             baseUrl: ApiHost,
@@ -58,7 +58,7 @@ function modifyOption(requestOptions: requestPromise.Options, options: RequestOp
 
     // Add API Key Bearer
     if (options.authenticate) {
-        requestOptions.headers["Authorization"] = "Bearer " + config.guildApiKey;
+        requestOptions.headers["Authorization"] = "Bearer " + serverConfig.guildApiKey;
     }
 
     requestOptions.qs = Object.assign(requestOptions.qs || {}, options.qs || {});
@@ -81,4 +81,4 @@ function modifyOption(requestOptions: requestPromise.Options, options: RequestOp
     return requestOptions;
 }
 
-export = requestAsync;
+export default requestAsync;
