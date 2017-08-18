@@ -1,7 +1,6 @@
-/// <references type="node" />
+/// <references path="../globals" />
 
-const orm = require("./orm-initialize");
-const config = require("../lib/server-config").GetInstance();
+import {getOrmInstance} from "./orm-initialize";
 
 /// import all model definitions.
 import {Application} from "./model/Application";
@@ -11,6 +10,7 @@ import {OfficerNote} from "./model/OfficerNote";
 import {Post} from "./model/Post";
 import {Role} from "./model/Role";
 import {User} from "./model/User";
+import {Model, Sequelize} from "sequelize-typescript";
 
 declare namespace NodeJS {
     export interface Global {
@@ -18,35 +18,40 @@ declare namespace NodeJS {
     }
 }
 
-interface DataStoreTable {
-    applications: Application;
-    events: Event;
-    logs: Log;
-    officerNotes: OfficerNote;
-    posts: Post;
-    roles: Role;
-    users: User;
+class DataStoreTable {
+    public Applications = Application;
+    public Event = Event;
+    public Logs = Log;
+    public OfficerNotes = OfficerNote;
+    public Posts = Post;
+    public Roles = Role;
+    public Users = User;
 }
 
-class DataStore {
+export class DataStore {
+
+    constructor() {
+        this._orm = getOrmInstance();
+        this._table = new DataStoreTable();
+    }
+
+    private _orm: Sequelize;
 
     public get rawStore() {
-        return orm;
+        return this._orm;
     }
 
     public get isInitialized() {
         return this._isSynchronized;
     }
 
-    public readonly tables = {
-        applications: Application,
-        events: Event,
-        logs: Log,
-        officerNotes: OfficerNote,
-        posts: Post,
-        roles: Role,
-        users: User,
-    };
+    private _table: DataStoreTable;
+    public get table() {
+        if (!this.isInitialized) {
+            return null;
+        }
+        return this._table;
+    }
 
     public async testConnectionAsync(): Promise<Boolean> {
         try {
@@ -60,7 +65,7 @@ class DataStore {
 
     private _isSynchronized = false;
 
-    public async initializeAsync(): Promise<Boolean> {
+    public async initializeAsync(): Promise<boolean> {
 
         if (this.isInitialized) {
             return true;
@@ -86,9 +91,10 @@ class DataStore {
     }
 }
 
-function getDatastoreInstance(): DataStore {
+export function getDatastoreInstance(): DataStore {
     global.__datastore_instance = global.__datastore_instance || new DataStore();
     return global.__datastore_instance;
 }
 
-export = getDatastoreInstance();
+export let datastore = getDatastoreInstance();
+export default datastore;

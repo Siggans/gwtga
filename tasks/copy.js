@@ -44,20 +44,6 @@ module.exports = (grunt) => {
             ]
         },
 
-        debug: {
-            files: [
-                {
-                    expand: true,
-                    cwd: '.',
-                    src: [
-                        'Procfile.debug'
-                    ],
-                    dest: outputPath,
-                    rename: () => path.join(outputPath, 'Procfile')
-                }
-            ]
-        },
-
         // This task is used to copy all resources such as html, pictures
         resources: {
             expand: true,
@@ -71,6 +57,30 @@ module.exports = (grunt) => {
                 '!**/*.sass'
             ],
             dest: 'artifacts'
+        },
+
+        'debug-procfile': {
+            files: [
+                {
+                    expand: true,
+                    cwd: '.',
+                    src: ['Procfile.debug'],
+                    dest: outputPath,
+                    rename: () => path.join(outputPath, 'Procfile')
+                }
+            ]
+        },
+
+        'dev-procfile': {
+            files: [
+                {
+                    expand: true,
+                    cwd: '.',
+                    src: ['Procfile.dev'],
+                    dest: outputPath,
+                    rename: () => path.join(outputPath, 'Procfile')
+                }
+            ]
         },
 
         // For development, we would want to copy over the entire bower directory and ts files

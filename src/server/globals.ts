@@ -1,3 +1,4 @@
+/// <references type="node />
 
 declare namespace NodeJS {
     export interface Global {

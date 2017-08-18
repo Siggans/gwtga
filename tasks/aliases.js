@@ -21,7 +21,7 @@ module.exports = (/* grunt */) => { // eslint-disable-line arrow-body-style
                 'compile',
                 'copy:dev',
                 'copy:output',
-                'copy:debug'
+                'copy:debug-procfile'
             ]
         },
 
@@ -32,7 +32,8 @@ module.exports = (/* grunt */) => { // eslint-disable-line arrow-body-style
                 'copy:resources',
                 'compile',
                 'copy:dev',
-                'copy:output'
+                'copy:output',
+                'copy:dev-procfile'
             ]
         },
 

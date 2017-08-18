@@ -1,45 +1,27 @@
 import {Request, Response} from "express-serve-static-core";
-import GW2Api = require("./lib/gw2api/index");
+import GW2Api from "./lib/gw2api/index";
+import {serverInitializationAsync} from "./server-initialize";
+import {createLogger} from "./lib/logger";
 
-const serverConfig = require("./lib/server-config");
 const compression = require("compression");
 const express = require("express");
 const path = require("path");
+const logger = createLogger("main");
 
 const basePath: string = path.join(__dirname, "..");
 const publicContentPath: string = path.join(basePath, "public");
 const app = express();
 
-if (!serverConfig.VerifyConfigExists()) {
-    console.error("Cannot find server configuration file(s), exiting server initialization");
-    process.exit(1);
-}
-
-const config = serverConfig.GetInstance();
-
-if (!config.isValid) {
-    console.error("Failed to retrieve necessary configuration values! Exiting server startup sequence.");
-    process.exit(1);
-}
-
 expressServerStartUp();
-
-async function datastoreInitAsync() {
-
-    const datastore =  require("./datastore");
-
-    let sync = await datastore.initializeAsync();
-    console.log("Database Synchronized: " + (sync ? "YES" : "nooooooo"));
-
-    return sync;
-}
 
 async function expressServerStartUp() {
 
-    if (!await datastoreInitAsync() ) {
-        console.error("Cannot Synchronize Datastore Models..  Exiting");
+    if (!await serverInitializationAsync()) {
+        logger.error("Failed to initialize server...");
         process.exit(1);
     }
+
+    logger.info("Starting App Server ... ");
 
     // PORT env is set automatically in production server.
     app.set("port", (process.env.PORT || 8080));
@@ -74,7 +56,6 @@ async function expressServerStartUp() {
             console.log(err);
             res.status(500).end();
         }
-
     });
 
     app.get("/test/members", async (req: Request, res: Response) => {
@@ -96,5 +77,3 @@ async function expressServerStartUp() {
         console.log("Node app is running on port", app.get("port")); // tslint:disable-line no-console
     });
 }
-
-

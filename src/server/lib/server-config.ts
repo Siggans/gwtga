@@ -1,4 +1,3 @@
-
 import path = require("path");
 import fs = require("fs");
 
@@ -11,7 +10,6 @@ declare namespace NodeJS {
 
 // File location is <RootDir>/server/lib
 const RootDir = path.join(__dirname, "../..");
-const EnvFile = path.join(RootDir, ".env");
 const ConfigFile = path.join(RootDir, "server-config.json");
 
 const ConfigFields = {
@@ -23,10 +21,10 @@ const ConfigFields = {
     APP_NAME: "app-name"
 };
 
-class ServerConfig {
+export class ServerConfig {
 
-    static VerifyConfigExists(): boolean {
-        return fs.existsSync(EnvFile) && fs.existsSync(ConfigFile);
+    public static VerifyConfigExists(): boolean {
+        return fs.existsSync(ConfigFile);
     }
 
     static GetInstance(): ServerConfig {
@@ -39,9 +37,10 @@ class ServerConfig {
 
     constructor() {
         if (!ServerConfig.VerifyConfigExists()) {
-            throw new Error("Cannot read configurations");
+            this._isValid = false;
+        } else {
+            this._readConfiguration();
         }
-        this._readConfiguration();
     }
 
     private _dbUrl: string;
@@ -90,6 +89,7 @@ class ServerConfig {
     }
 
     private _db_no_ssl: boolean;
+
     public get dbUseSSL(): boolean {
         return !this._db_no_ssl;
     }
@@ -99,7 +99,7 @@ class ServerConfig {
         let serverConfig = require(ConfigFile);
 
         this._environment = process.env.APP_ENVIRONMENT;
-        this._db_no_ssl = process.env.DATABASE_NO_SSL === "1";
+        this._db_no_ssl = Boolean(process.env.DATABASE_NO_SSL);
         this._appName = getConfigValue(ConfigFields.APP_NAME);
         this._cookieSecret = getConfigValue(ConfigFields.COOKIE_SECRET);
         this._guildApiKey = getConfigValue(ConfigFields.GUILD_API_KEY);
@@ -119,7 +119,7 @@ class ServerConfig {
             return serverConfig[fieldName];
         }
     }
-
 }
 
-export = ServerConfig;
+export let serverConfig = ServerConfig.GetInstance();
+export default serverConfig;
