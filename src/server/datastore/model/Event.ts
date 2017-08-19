@@ -27,6 +27,6 @@ export class Event extends Model<Event> {
     @BelongsTo(() => User, "creatorId")
     public CreatedBy: User;
 
-    @BelongsToMany(() => User, "UsersLeadEvents", "eventId")
+    @BelongsToMany(() => User, "UserLeadEvent", "eventId")
     public Leaders: User[];
 }

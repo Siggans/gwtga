@@ -10,15 +10,7 @@ export class Role extends Model<Role> {
     @Column public id: number;
 
     @Unique @AllowNull(false)
-    @Column
-    public get role(): string {
-        return this.getDataValue("role") as string;
-    }
-
-    public set role(s: string) {
-        // input string should be sanitized
-        this.setDataValue("role", s.toUpperCase());
-    }
+    @Column role: string;
 
     @AllowNull(false) @Default(9999)
     @Column

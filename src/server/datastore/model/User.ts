@@ -26,9 +26,9 @@ export class User extends Model<User> {
     @AllowNull(false)
     @Column public guildRank: number;
 
-    @Column(DataType.DATEONLY) public joined: Date;
+    @Column public joined: Date;
 
-    @Column(DataType.DATEONLY) public left: Date;
+    @Column public left: Date;
 
     @Column public googleAccount: string;
     @Column public discordAccount: string;
@@ -39,7 +39,7 @@ export class User extends Model<User> {
 
     @Column public isBanned: boolean;
 
-    @Column(DataType.DATEONLY) public previousLeave: Date;
+    @Column public previousLeave: Date;
 
     @Default(0) @AllowNull(false)
     @Column public rejoinCount: number;
@@ -54,7 +54,7 @@ export class User extends Model<User> {
     @HasMany(() => Event, "creatorId")
     public AuthoredEvents: Event[];
 
-    @BelongsToMany(() => Event, "UsersLeadEvents", "userId")
+    @BelongsToMany(() => Event, "UserLeadEvent", "userId")
     public Events: Event[];
 
     // officer note associations
