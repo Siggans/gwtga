@@ -1,6 +1,7 @@
 import {createLogger} from "./lib/logger";
 import {ServerConfig, serverConfig} from "./lib/server-config";
 import {datastore} from "./datastore/index";
+import {DatastoreApiSync} from "./service/datastore-api-sync";
 
 const logger = createLogger("server-initialize");
 
@@ -18,12 +19,17 @@ export async function serverInitializationAsync(): Promise<boolean> {
 
     logger.info("Initializing Datastore and Verify Model ...");
     if (!await datastoreInitAsync()) {
-        logger.error(" Failed to initialize datastore.");
+        logger.error("Failed to initialize datastore.");
         return false;
     }
 
     logger.info("Synchronize Datastore to Api Data ...");
+    if (!await DatastoreApiSync.syncAllMembersAsync()) {
+        logger.error("Failed to record members to list.");
+    }
 
+    // TODO:  Missing log record.
+    // TODO:  Initialize members.
     return true;
 }
 
