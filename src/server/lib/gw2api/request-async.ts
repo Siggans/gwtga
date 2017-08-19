@@ -1,9 +1,9 @@
 import {ApiResponseData, RequestOption} from "./api-types";
 import {serverConfig} from "../server-config";
-import * as requestPromise from "request-promise-native";
+import * as requestPromise from "request-promise";
 import * as http from "http";
 
-import prequest = require("request-promise-native");
+import prequest = require("request-promise");
 
 const ApiHost = "https://api.guildwars2.com/";
 
@@ -32,7 +32,8 @@ export async function requestAsync(endPoint: string, options?: RequestOption): P
                 }
                 return result;
             },
-            resolveWithFullResponse: true
+            resolveWithFullResponse: true,
+            transform2xxOnly: true
         },
         options));
 

@@ -1,7 +1,9 @@
 import {ApiResponseData, MemberData, RequestOption} from "./api-types";
 import {requestAsync} from "./request-async";
 import {serverConfig} from "../server-config";
+import {createLogger} from "../logger";
 
+const logger = createLogger("lib/gw2api/");
 class GW2Api {
 
     public static async GetGuildMembersAsync(): Promise<ApiResponseData> {
@@ -37,7 +39,7 @@ class GW2Api {
     public static ConvertDataToRankMap(arrayData: Array<any>): any {
         let rankMap = {};
         arrayData.forEach((data) => {
-            rankMap[data.id.toUpperCase()] = typeof(data.order) === "number" ? data.order : parseInt(data.order, 10) || 9999;
+            rankMap[data.id.toUpperCase()] = typeof(data.order) === "number" ? data.order : parseInt(data.order, 10);
         });
         return rankMap;
     }
@@ -52,7 +54,7 @@ class GW2Api {
             memberTracker[data.name] = true;
             result.push({
                 name: <string>data.name,
-                rank: <number>rankMap[data.rank.toUpperCase()],
+                rank: <number>rankMap[data.rank.toUpperCase()] || 9999,
                 joined: new Date(Date.parse(data.joined))
             });
         });

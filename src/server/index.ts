@@ -5,6 +5,8 @@ import {createLogger} from "./lib/logger";
 
 const compression = require("compression");
 const express = require("express");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 const logger = createLogger("main");
 

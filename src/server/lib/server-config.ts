@@ -18,7 +18,8 @@ const ConfigFields = {
     GUILD_NAME: "guild-name",
     GUILD_ID: "guild-id",
     GUILD_TAG: "guild-tag",
-    APP_NAME: "app-name"
+    APP_NAME: "app-name",
+    INITIAL_DATA: "initial-data"
 };
 
 export class ServerConfig {
@@ -94,6 +95,12 @@ export class ServerConfig {
         return !this._db_no_ssl;
     }
 
+    private _initial_data: Array<any>;
+
+    public get initialData(): Array<any> {
+        return this._initial_data;
+    }
+
     private _readConfiguration() {
         let isValid = true;
         let serverConfig = require(ConfigFile);
@@ -107,6 +114,7 @@ export class ServerConfig {
         this._guildName = getConfigValue(ConfigFields.GUILD_NAME);
         this._guildTag = getConfigValue(ConfigFields.GUILD_TAG);
         this._dbUrl = process.env.DATABASE_URL;
+        this._initial_data = serverConfig[ConfigFields.INITIAL_DATA] || [];
 
         this._isValid = isValid;
 
