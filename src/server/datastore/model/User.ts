@@ -2,13 +2,14 @@
 
 import {
     AllowNull, AutoIncrement, BelongsToMany, Column, DataType, Default, ForeignKey, HasMany, HasOne, Model, PrimaryKey,
-    Table
+    Table, Unique
 } from "sequelize-typescript";
 import {Application} from "./Application";
 import {Event} from "./Event";
 import {OfficerNote} from "./OfficerNote";
 import {Post} from "./Post";
 import {Role} from "./Role";
+import {unique} from "sequelize-typescript/lib/utils/array";
 
 @Table({version: true})
 export class User extends Model<User> {
@@ -23,6 +24,11 @@ export class User extends Model<User> {
 
     @Column public hash: string; // hashed string key from bcrypt
 
+    @Unique @AllowNull(true)
+    @Column public oneTimeKey: string;
+
+    @Column public oneTimeKeyExpire: Date;
+
     @AllowNull(false)
     @Column public guildRank: number;
 
@@ -30,7 +36,7 @@ export class User extends Model<User> {
 
     @Column public left: Date;
 
-    @Column public googleAccount: string;
+    @Column public googleId: string;
     @Column public discordAccount: string;
     @Column public nickNames: string;
 
@@ -40,7 +46,6 @@ export class User extends Model<User> {
     @Column public isBanned: boolean;
 
     @Column public previousLeave: Date;
-
     @Default(0) @AllowNull(false)
     @Column public rejoinCount: number;
 

@@ -18,8 +18,6 @@ export class Application extends Model<Application> {
     @AllowNull(false)
     @Column(DataType.STRING(15)) public server: string;
 
-    // google and discord account (google will be how we log user in)
-    @Column public googleAccount: string;
     @Column public discordAccount: string;
 
     // user's preferred Nick name.

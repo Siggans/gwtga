@@ -18,7 +18,11 @@ const ConfigFields = {
     GUILD_NAME: "guild-name",
     GUILD_ID: "guild-id",
     GUILD_TAG: "guild-tag",
+    HOST_LOCAL: "host-local",
+    HOST_PRODUCTION: "host-production",
     APP_NAME: "app-name",
+    GOOGLE_CLIENT_ID: "google-client-id",
+    GOOGLE_CLIENT_SECRET: "google-client-secret",
     INITIAL_DATA: "initial-data"
 };
 
@@ -101,6 +105,34 @@ export class ServerConfig {
         return this._initial_data;
     }
 
+    private _googleClientId: string;
+    public get googleClientId(): string {
+        return this._googleClientId;
+    }
+
+    private _googleClientSecret: string;
+    public get googleClientSecret(): string {
+        return this._googleClientSecret;
+    }
+
+    private _hostLocal: string;
+    public get hostLocal(): string {
+        return this._hostLocal;
+    }
+
+    private _hostProduction: string;
+    public get hostProduction(): string {
+        return this._hostProduction;
+    }
+
+    public get host(): string {
+        return this.isProduction ? this.hostProduction : this.hostLocal;
+    }
+
+    public get isProduction(): boolean {
+        return "PRODUCTION".localeCompare(this.environment) === 0;
+    }
+
     private _readConfiguration() {
         let isValid = true;
         let serverConfig = require(ConfigFile);
@@ -114,8 +146,11 @@ export class ServerConfig {
         this._guildName = getConfigValue(ConfigFields.GUILD_NAME);
         this._guildTag = getConfigValue(ConfigFields.GUILD_TAG);
         this._dbUrl = process.env.DATABASE_URL;
+        this._googleClientId = getConfigValue(ConfigFields.GOOGLE_CLIENT_ID);
+        this._googleClientSecret = getConfigValue(ConfigFields.GOOGLE_CLIENT_SECRET);
         this._initial_data = serverConfig[ConfigFields.INITIAL_DATA] || [];
-
+        this._hostLocal = getConfigValue(ConfigFields.HOST_LOCAL);
+        this._hostProduction = getConfigValue(ConfigFields.HOST_PRODUCTION);
         this._isValid = isValid;
 
         function getConfigValue(fieldName: string): string {

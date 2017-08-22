@@ -8,7 +8,9 @@
   "private": true,
   "main": "server/index.js",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "compression": "^1.7.0",
+    "connect-session-sequelize": "^4.1.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.4",
     "express-session": "^1.15.5",
@@ -25,6 +27,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.16.4",
     "@types/compression": "0.0.33",
     "@types/cookie-parser": "^1.4.0",
     "@types/express": "^4.0.36",

@@ -5,8 +5,10 @@ import {Role} from "./datastore/model/Role";
 import {User} from "./datastore/model/User";
 import {Transaction} from "sequelize";
 import {DatastoreApiSync} from "./service/datastore-api-sync";
+import {Util} from "./lib/util";
 
 const logger = createLogger("server-initialize");
+const alwaysProcessMember = false;
 
 export async function serverInitializationAsync(): Promise<boolean> {
 
@@ -33,7 +35,7 @@ export async function serverInitializationAsync(): Promise<boolean> {
         return false;
     }
 
-    if (logResult[0] && logResult[1] !== 1) {
+    if ((logResult[0] && logResult[1] !== 0) || alwaysProcessMember) {
         logger.info("Synchronize Datastore to Api Member Data ...");
         if (!await DatastoreApiSync.syncAllMembersAsync()) {
             logger.error("Failed to record members to store.");
@@ -44,7 +46,7 @@ export async function serverInitializationAsync(): Promise<boolean> {
         logger.info("No New Log Gathered, Skip Member List Update!");
     }
 
-    logger.info("Initialize members ... ");
+    logger.info("Initialize default members ... ");
     if (!await prepareInitialRoleDataAsync()) {
         logger.error("Failed to initialize members in the database");
         return false;
@@ -77,8 +79,9 @@ async function prepareInitialRoleDataAsync(): Promise<boolean> {
                 if (!user.$has("Role", role)) {
                     await user.$add("Role", role, {transaction: t});
                 }
-                if (value.google && user.googleAccount !== value.google) {
-                    user.googleAccount = value.google;
+                if (value.key && !user.googleId) {
+                    user.oneTimeKey = value.key;
+                    user.oneTimeKeyExpire = Util.addDayToDate(new Date(), 3);
                     await user.save({transaction: t});
                 }
             }
