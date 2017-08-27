@@ -1,13 +1,15 @@
 import {Request, Response} from "express-serve-static-core";
 import GW2Api from "./lib/gw2api/index";
 import {serverInitializationAsync} from "./server-initialize";
-import {createLogger} from "./lib/logger";
 import {getOrmInstance} from "./datastore/orm-initialize";
 import {serverConfig} from "./lib/server-config";
 import {VerifyCallback} from "passport-google-oauth2";
+import {LoginUser, QueryUserResult, Util} from "./lib/util";
+import {NextFunction} from "express";
+import {ApiController} from "./api/index";
 
 const path = require("path");
-const logger = createLogger("main");
+const logger = Util.CreateLogger("main");
 const url = require("url");
 const compression = require("compression");
 const express = require("express");
@@ -17,6 +19,7 @@ const bodyParser = require("body-parser");
 
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 
 const basePath: string = path.join(__dirname, "..");
 const publicContentPath: string = path.join(basePath, "public");
@@ -34,25 +37,33 @@ async function expressServerStartUp() {
             callbackURL: url.resolve(serverConfig.host, "/oauth-google/callback"),
             passReqToCallback: true
         },
-        (req: Request, accessToken: string, refreshToken: string, profile: any, done: VerifyCallback) => {
-            logger.info("User Info: ", JSON.stringify(profile, null, 2));
-            let user = {
-                googleId: profile.id
-            };
-            logger.info("id type: " + typeof(profile.id));
-            done(null, user, {message: "User is verified via google"});
+        async (req: Request, accessToken: string, refreshToken: string, profile: any, done: VerifyCallback) => {
+            let userQuery: QueryUserResult = await Util.LoginUser.TryGetUserWithGoogleStratAsync(profile, req.user || {});
+            if (userQuery.error) {
+                done(true, userQuery.user, {message: userQuery.message});
+            }
+            done(null, userQuery.user);
+        }
+    ));
+
+    passport.use(new LocalStrategy(
+        {passReqToCallback: true},
+        async (req: Request, username: string, password: string, done: VerifyCallback) => {
+            let userQuery: QueryUserResult = await Util.LoginUser.TryGetUserWithLocalStratAsync(password, req.user || {});
+            if (userQuery.error) {
+                done(true, userQuery.user, {message: userQuery.message});
+            }
+            done(null, userQuery.user);
         }
     ));
 
     // Passport session setup.
     // https://github.com/mstade/passport-google-oauth2/blob/master/example/app.js#L18
-    passport.serializeUser((user: any, done: (err: any, data: any) => void): void => {
-        logger.info("Called serialize User: ", user);
+    passport.serializeUser((user: LoginUser, done: (err: any, data: any) => void): void => {
         done(null, user);
     });
 
-    passport.deserializeUser((user: any, done: (err: any, data: any) => void): void => {
-        logger.info("Called deserialize User: ", user);
+    passport.deserializeUser((user: LoginUser | string, done: (err: any, data: any) => void): void => {
         done(null, user);
     });
 
@@ -87,8 +98,14 @@ async function expressServerStartUp() {
     }));
     app.get("/oauth-google/callback", passport.authenticate("google", {
         successRedirect: "/",
-        failureRedirect: "/failed"
+        failureRedirect: "/login"
     }));
+
+    app.post("/login", passport.authenticate("local", {failureRedirect: "/login"}));
+    app.get("/logout", (req: Request, res: Response, next: NextFunction) => {
+        req.logOut();
+        next();
+    });
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
@@ -106,9 +123,7 @@ async function expressServerStartUp() {
     // static resource service
     app.use(express.static(publicContentPath));
 
-    // app.get("/", (req: Request, res: Response) => {
-    //     res.send("<p>Hello World?</p>");
-    // });
+    app.use("/api", ApiController);
 
     app.get("/test/logs", async (req: Request, res: Response) => {
         try {

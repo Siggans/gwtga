@@ -1,6 +1,6 @@
-import GW2Api from "../lib/gw2api/index";
-import {ApiResponseData, MemberData} from "../lib/gw2api/api-types";
-import {createLogger} from "../lib/logger";
+import GW2Api from "./gw2api/index";
+import {ApiResponseData, MemberData} from "./gw2api/api-types";
+import {createLogger} from "./logger";
 import {datastore} from "../datastore/index";
 import {User} from "../datastore/model/User";
 import {Log} from "../datastore/model/Log";

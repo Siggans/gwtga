@@ -37,6 +37,7 @@ export class User extends Model<User> {
     @Column public left: Date;
 
     @Column public googleId: string;
+    @Column public googleAccountEmail: string;
     @Column public discordAccount: string;
     @Column public nickNames: string;
 

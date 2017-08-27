@@ -4,7 +4,7 @@ import {datastore} from "./datastore/index";
 import {Role} from "./datastore/model/Role";
 import {User} from "./datastore/model/User";
 import {Transaction} from "sequelize";
-import {DatastoreApiSync} from "./service/datastore-api-sync";
+import {DatastoreApiSync} from "./lib/datastore-api-sync";
 import {Util} from "./lib/util";
 
 const logger = createLogger("server-initialize");
@@ -81,7 +81,7 @@ async function prepareInitialRoleDataAsync(): Promise<boolean> {
                 }
                 if (value.key && !user.googleId) {
                     user.oneTimeKey = value.key;
-                    user.oneTimeKeyExpire = Util.addDayToDate(new Date(), 3);
+                    user.oneTimeKeyExpire = Util.AddDayToDate(new Date(), 3);
                     await user.save({transaction: t});
                 }
             }

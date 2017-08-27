@@ -1,3 +1,4 @@
+import {Util} from "./util";
 
 // https://wiki.guildwars2.com/wiki/User:Manifold/Player_character_quotes
 const raceQuotes = {
@@ -23,6 +24,8 @@ const raceQuotes = {
     }
 };
 
+
+// TODO:  Work on this when I have time.
 const races = ["charr"];
 
 interface RaceQuote {
@@ -46,9 +49,5 @@ function selectRandomElementFromArray<T>(array: Array<T>): T {
 }
 
 function createRandomIndex(maxInt: number): number {
-    if (typeof maxInt !== "number" || maxInt <= 0) { // We support only positive number value.
-        return 0;
-    }
-    maxInt = Math.floor(maxInt);
-    return Math.floor(Math.random() * maxInt);
+    return Util.GetRandomInt(maxInt);
 }
