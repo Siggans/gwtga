@@ -13,5 +13,4 @@ module.exports = (grunt) => {
             src: 'src/server/**/*.ts'
         }
     };
-
 };

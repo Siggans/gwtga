@@ -87,7 +87,6 @@ export class DataStore {
         }
         this._isSynchronized = true;
         return true;
-
     }
 }
 

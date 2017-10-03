@@ -1,5 +1,4 @@
 import {Request, Response} from "express-serve-static-core";
-import GW2Api from "./lib/gw2api/index";
 import {serverInitializationAsync} from "./server-initialize";
 import {getOrmInstance} from "./datastore/orm-initialize";
 import {serverConfig} from "./lib/server-config";
@@ -30,6 +29,118 @@ expressServerStartUp();
 async function expressServerStartUp() {
 
     let sessionStore = await expressServerInit();
+
+    // Let's get to the fun part.
+    logger.info("Starting App Server ... ");
+
+    // PORT env is set automatically in production server.
+    app.set("port", (process.env.PORT || 8080));
+    app.set("views", path.join(__dirname, "views"));
+    app.set("view engine", "ejs");
+
+    // Express session should be set before passport session is completed.
+    // cookie and session storage setup
+    app.use(session({
+        resave: false, // required by connect-session-sequelize.
+        store: sessionStore,
+        secret: serverConfig.cookieSecret,
+        saveUninitialized: true,
+        cookie: {
+            secure: serverConfig.environment === "PRODUCTION",
+            maxAge: 7 * 24 * 3600 * 1000,
+            httpOnly: true,
+        }
+    }));
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        if (req.user && req.user.isAuthenticated) {
+            next();
+        }
+        req.session.lastUrl = req.originalUrl;
+    });
+    app.get("/oauth-google", passport.authenticate("google", {
+        scope: [
+            "https://www.googleapis.com/auth/plus.login",
+            "https://www.googleapis.com/auth/plus.profile.emails.read"
+        ]
+    }));
+    app.get("/oauth-google/callback", passport.authenticate("google", {
+        successRedirect: "/login/success",
+        failureRedirect: "/login"
+    }));
+
+    app.get("/login/success", (req: Request, res: Response) => {
+        if (req.user && !req.user.isAuthenticated) {
+            res.redirect("/login"); // GET on /login will be handled by client app.
+        }
+        res.redirect(req.session.lastUrl || "/");
+    });
+
+    app.post("/login", passport.authenticate("local", {failureRedirect: "/login"}));
+    app.get("/logout", (req: Request, res: Response, next: NextFunction) => {
+        req.logOut();
+        next();
+    });
+
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: true}));
+
+    // Use Compress response.
+    app.use(compression({
+        filter: (req: Request, res: Response) => {
+            if (req.headers["x-no-compression"]) {
+                return false;
+            }
+            return compression.filter(req, res);
+        }
+    }));
+
+    // Static resource service
+    app.use(express.static(publicContentPath));
+
+    app.use("/api", ApiController);
+
+    // Let client side take care of routing.
+    app.get("*", (req: Request, res: Response) => {
+        res.render("index", {
+            title: serverConfig.appName,
+            devEnv: !serverConfig.isProduction
+        });
+    });
+
+    app.listen(app.get("port"), () => {
+        logger.info("Node app is running on port", app.get("port")); // tslint:disable-line no-console
+    });
+}
+
+async function expressServerInit() {
+    if (!await serverInitializationAsync()) {
+        logger.error("Failed to initialize server...");
+        process.exit(1);
+    }
+
+    passportInitialize();
+
+    let sessionStore;
+    try {
+        sessionStore = new SessionStore({
+            db: getOrmInstance(),
+            checkExpirationInterval: 15 * 60 * 1000,
+            expiration: 7 * 24 * 3600 * 1000
+        });
+        await sessionStore.sync();
+    }
+    catch (err) {
+        logger.error("Failed to establish session storage");
+        process.exit(1);
+    }
+    return sessionStore;
+}
+
+function passportInitialize() {
 
     passport.use(new GoogleStrategy({
             clientID: serverConfig.googleClientId,
@@ -66,118 +177,4 @@ async function expressServerStartUp() {
     passport.deserializeUser((user: LoginUser | string, done: (err: any, data: any) => void): void => {
         done(null, user);
     });
-
-    // Let's get to the fun part.
-    logger.info("Starting App Server ... ");
-
-    // PORT env is set automatically in production server.
-    app.set("port", (process.env.PORT || 8080));
-
-    // Express session should be set before passport session is completed.
-    // cookie and session storage setup
-    app.use(session({
-        resave: false, // required by connect-session-sequelize.
-        store: sessionStore,
-        secret: serverConfig.cookieSecret,
-        saveUninitialized: true,
-        cookie: {
-            secure: serverConfig.environment === "PRODUCTION",
-            maxAge: 7 * 24 * 3600 * 1000,
-            httpOnly: true,
-        }
-    }));
-
-    app.use(passport.initialize());
-    app.use(passport.session());
-
-    app.get("/oauth-google", passport.authenticate("google", {
-        scope: [
-            "https://www.googleapis.com/auth/plus.login",
-            "https://www.googleapis.com/auth/plus.profile.emails.read"
-        ]
-    }));
-    app.get("/oauth-google/callback", passport.authenticate("google", {
-        successRedirect: "/",
-        failureRedirect: "/login"
-    }));
-
-    app.post("/login", passport.authenticate("local", {failureRedirect: "/login"}));
-    app.get("/logout", (req: Request, res: Response, next: NextFunction) => {
-        req.logOut();
-        next();
-    });
-
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}));
-
-    // Use Compress response.
-    app.use(compression({
-        filter: (req: Request, res: Response) => {
-            if (req.headers["x-no-compression"]) {
-                return false;
-            }
-            return compression.filter(req, res);
-        }
-    }));
-
-    // static resource service
-    app.use(express.static(publicContentPath));
-
-    app.use("/api", ApiController);
-
-    app.get("/test/logs", async (req: Request, res: Response) => {
-        try {
-            let logList = (await GW2Api.GetGuildLogAsync()).data as Array<any>;
-            let body: string = "Total Count: " + logList.length + "<p>";
-            logList.forEach((log) => {
-                body += `${JSON.stringify(log)}<br>`;
-            });
-            body += "</p>";
-            res.send(body);
-        } catch (err) {
-            console.log(err);
-            res.status(500).end();
-        }
-    });
-
-    app.get("/test/members", async (req: Request, res: Response) => {
-        try {
-            let memberList = await GW2Api.GetGuildMembersDataAsync();
-            let body: string = "Total Count: " + memberList.length + "<ul>";
-            memberList.forEach((member) => {
-                body += `<li>${JSON.stringify(member)}</li>`;
-            });
-            body += "</ul>";
-            res.send(body);
-        } catch (err) {
-            console.log(err);
-            res.status(500).end();
-        }
-    });
-
-    app.listen(app.get("port"), () => {
-        console.log("Node app is running on port", app.get("port")); // tslint:disable-line no-console
-    });
-}
-
-async function expressServerInit() {
-    if (!await serverInitializationAsync()) {
-        logger.error("Failed to initialize server...");
-        process.exit(1);
-    }
-
-    let sessionStore;
-    try {
-        sessionStore = new SessionStore({
-            db: getOrmInstance(),
-            checkExpirationInterval: 15 * 60 * 1000,
-            expiration: 7 * 24 * 3600 * 1000
-        });
-        await sessionStore.sync();
-    }
-    catch (err) {
-        logger.error("Failed to establish session storage");
-        process.exit(1);
-    }
-    return sessionStore;
 }

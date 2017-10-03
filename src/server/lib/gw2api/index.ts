@@ -36,7 +36,7 @@ class GW2Api {
         return GW2Api.ConvertDataToMemberData(responseData.data, rankMap);
     }
 
-    public static ConvertDataToRankMap(arrayData: Array<any>): any {
+    private static ConvertDataToRankMap(arrayData: Array<any>): any {
         let rankMap = {};
         arrayData.forEach((data) => {
             rankMap[data.id.toUpperCase()] = typeof(data.order) === "number" ? data.order : parseInt(data.order, 10);
@@ -44,7 +44,7 @@ class GW2Api {
         return rankMap;
     }
 
-    public static ConvertDataToMemberData(arrayData: Array<any>, rankMap: any): Array<MemberData> {
+    private static ConvertDataToMemberData(arrayData: Array<any>, rankMap: any): Array<MemberData> {
         let memberTracker = {};
         let result: Array<MemberData> = [];
         arrayData.forEach((data: any) => {

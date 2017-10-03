@@ -15,20 +15,38 @@ module.exports = (grunt) => {
 
     return {
         default: {
-            files: [{
-                expand: true,
-                cwd: 'artifacts/server',
-                dest: path.join(outputPath, 'server'),
-                src: [
-                    '**/*'
-                ]
-            }],
+            files: [
+                {
+                    expand: true,
+                    cwd: 'artifacts/server',
+                    dest: path.join(outputPath, 'server'),
+                    src: '**/*'
+                },
+                {
+                    expand: true,
+                    cwd: 'artifacts/public',
+                    dest: path.join(outputPath, 'public'),
+                    src: '**/*'
+                }
+            ],
             failOnError: true,
             updateAndDelete: true,
             compareUsing: 'md5', // use file change to check for differences.
             options: {
                 force: true // need to remove files outside the current project dir.
             }
+        },
+
+        'dev-client': {
+            files: [{
+                expand: true,
+                cwd: 'src/public',
+                dest: 'artifacts/public',
+                src: '**/*'
+            }],
+            failOnError: true,
+            updateAndDelete: true,
+            compareUsing: 'md5'
         }
     };
 

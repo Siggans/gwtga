@@ -1,20 +1,20 @@
-import GW2Api from "./gw2api/index";
-import {ApiResponseData, MemberData} from "./gw2api/api-types";
-import {createLogger} from "./logger";
-import {datastore} from "../datastore/index";
-import {User} from "../datastore/model/User";
-import {Log} from "../datastore/model/Log";
+import GW2Api from "../gw2api/index";
+import {ApiResponseData, MemberData} from "../gw2api/api-types";
+import {createLogger} from "../logger";
+import {datastore} from "../../datastore/index";
+import {User} from "../../datastore/model/User";
+import {Log} from "../../datastore/model/Log";
 
 const logger = createLogger("service/datastore-api-sync");
 const noDate = new Date(0);
 
 export class DatastoreApiSync {
 
-    public static async syncAllMembersAsync(): Promise<boolean> {
+    public static async ProcessGuildMembersAsync(): Promise<boolean> {
         return await syncAllMembersAsyncImpl(5);
     }
 
-    public static async syncLogsAsync(): Promise<[boolean, number]> {
+    public static async ProcessGuildLogsAsync(): Promise<[boolean, number]> {
         return await syncLogsAsync();
     }
 }

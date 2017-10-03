@@ -7,6 +7,11 @@
         "node": true,
         "es6": true
     },
+    "globals": {
+        "Polymer": true,
+        "gwtga": true,
+        "customeElement": true
+    },
     "extends": "eslint:recommended",
     "rules": {
         "accessor-pairs": "error",

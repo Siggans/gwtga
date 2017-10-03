@@ -72,6 +72,19 @@ module.exports = (/* grunt */) => { // eslint-disable-line arrow-body-style
                 'tslint',
                 'shell:typescript'
             ]
+        },
+
+        'dev': {
+            description: 'Compile and start developer environment',
+            tasks: [
+                'dev-build',
+                'dev-watch'
+            ]
+        },
+
+        'dev-watch': {
+            description: 'Start developer watch environment',
+            tasks: ['concurrent:watch']
         }
     };
 
